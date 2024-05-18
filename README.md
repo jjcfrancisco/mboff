@@ -14,6 +14,7 @@ mboff myMap.mbtiles category=road
 
 ## Future
 * Ability to provide zoom levels so data can be removed in specified zoom level. If no zoom level is specified, it applies to all zoom levels.
+* Add mboff to Homebrew
 * A command for *checking* if a key/value pair exist in a MBTiles file and how many times is present.
 
 ## License
