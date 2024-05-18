@@ -30,6 +30,7 @@ func off(ctx *cli.Context) error {
 		if err := conn.update(results); err != nil {
 			log.Fatal(err)
 		}
+		fmt.Println(fmt.Sprintf("Successful. The key/value %s was found in %d instance(s). MBTiles updated.", rawKeyValue, len(results)))
 	} else {
 		log.Fatal(fmt.Sprintf("The key value %s was not present in the MBTiles file. Nothing was removed.", keyValue))
 	}
