@@ -17,9 +17,9 @@ func createConn(fp string) (*dbConn, error) {
 	return &dbConn{db: db}, nil
 }
 
-func (conn *dbConn) find(keyValue *kv) ([]result, error) {
+func (conn *dbConn) find(keyValue *kv, userZoomLevel *int) ([]result, error) {
 
-	rows, err := conn.db.Query("SELECT * FROM images;")
+	rows, err := conn.db.Query("SELECT zoom_level, tile_data, tile_id FROM images;")
 	if err != nil {
 		return nil, err
 	}
@@ -47,10 +47,22 @@ func (conn *dbConn) find(keyValue *kv) ([]result, error) {
 			for _, f := range layer.Features {
 				newFeature := geojson.NewFeature(f.Geometry)
 				newFeature.Properties = f.Properties
+				// Keep copy of original id
+				idOg := newFeature.Properties["id"]
 				newFeature.Properties["id"] = strconv.FormatInt(int64(newFeature.Properties["id"].(float64)), 10)
-				if newFeature.Properties[keyValue.key] != keyValue.value {
-					newLayer.Append(newFeature)
+				if userZoomLevel != nil {
+					// Zoom level provided
+					if newFeature.Properties[keyValue.key] != keyValue.value && zoomLevel == *userZoomLevel {
+						newLayer.Append(newFeature)
+					}
+				} else {
+					// No zoom level provided
+					if newFeature.Properties[keyValue.key] != keyValue.value {
+						newLayer.Append(newFeature)
+					}
 				}
+				// Id back to original
+				newFeature.Properties["id"] = idOg
 			}
 			newLayers[i] = newLayer
 		}
@@ -58,7 +70,7 @@ func (conn *dbConn) find(keyValue *kv) ([]result, error) {
 		if err != nil {
 			return nil, err
 		}
-		results = append(results, result{zoomLevel: zoomLevel, tileId: tileId, tileData: newTileData})
+		results = append(results, result{tileId: tileId, tileData: newTileData})
 	}
 	err = rows.Err()
 	if err != nil {
@@ -69,18 +81,35 @@ func (conn *dbConn) find(keyValue *kv) ([]result, error) {
 
 }
 
-func (conn *dbConn) update(results []result) error {
+func (conn *dbConn) update(results []result, userZoomLevel *int) error {
 
-	stmt, err := conn.db.Prepare("UPDATE images SET tile_data = ? WHERE tile_id = ? AND zoom_level = ?;")
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-
-	for _, result := range results {
-		_, err = stmt.Exec(result.tileData, result.tileId, result.zoomLevel)
+	if userZoomLevel != nil {
+		// Zoom level provided
+		stmt, err := conn.db.Prepare("UPDATE images SET tile_data = ? WHERE tile_id = ? AND zoom_level = ?;")
 		if err != nil {
 			return err
+		}
+		defer stmt.Close()
+
+		for _, result := range results {
+			_, err = stmt.Exec(result.tileData, result.tileId, userZoomLevel)
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		// No zoom level provided
+		stmt, err := conn.db.Prepare("UPDATE images SET tile_data = ? WHERE tile_id = ?;")
+		if err != nil {
+			return err
+		}
+		defer stmt.Close()
+
+		for _, result := range results {
+			_, err = stmt.Exec(result.tileData, result.tileId)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
