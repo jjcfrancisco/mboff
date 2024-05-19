@@ -2,6 +2,13 @@
 
 Mboff is tiny CLI that allows the optimisation of MBTiles by removing unnecessary data. You only need to provide it with a key/value pair and `mboff` will search and remove such data.
 
+## Installation:
+
+```bash
+brew tap jjcfrancisco/mboff # Adds the Github repository as a tap
+brew install yeo
+```
+
 ## Usage
 `mboff` requires you to at least give a path to the existing *MBTiles* file and the key/value pair of the data you wish to remove from the file. Optionally, you may want to filter the removal of data by zoom level:
 ```bash
