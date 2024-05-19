@@ -44,3 +44,12 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+brews:
+  - repository:
+      owner: jjcfrancisco
+      name: homebrew-mboff
+    folder: Formula
+    homepage: "https://github.com/jjcfrancisco/mboff"
+    description: "Optimise MBTiles by removing unnecessary data."
+    license: "Apache License 2.0"
