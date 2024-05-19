@@ -68,7 +68,7 @@ func startCli() *cli.App {
 	// Main CLI
 	app := &cli.App{
 		Name: "Mboff",
-		Version: "v0.2.1",
+		Version: "v0.2.2",
 		Usage:  "Mboff optimises your mbtiles by removing unnecessary data.",
 		Action: off,
 	}
@@ -76,3 +76,4 @@ func startCli() *cli.App {
 	return app
 
 }
+
