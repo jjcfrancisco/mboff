@@ -3,13 +3,17 @@
 Mboff is tiny CLI that allows the optimisation of MBTiles by removing unnecessary data. You only need to provide it with a key/value pair and `mboff` will search and remove such data.
 
 ## Usage
-`mboff` requires the user to give a path to the existing *MBTiles* file and the key/value pair of the data you wish to remove from the file:
+`mboff` requires you to at least give a path to the existing *MBTiles* file and the key/value pair of the data you wish to remove from the file. Optionally, you may want to filter the removal of data by zoom level:
 ```bash
-mboff [file path] [key value pair]
+mboff [file path] [key value pair] [zoom level]
 ```
-Example:
+Examples:
 ```bash
+# Remove data that contains category=road key/value pair
 mboff myMap.mbtiles category=road
+
+# Remove data that contains category=road key/value pair in zoom level 10
+mboff myMap.mbtiles category=road 10
 ```
 
 ## Future
