@@ -6,7 +6,7 @@ Mboff is tiny CLI that allows the optimisation of MBTiles by removing unnecessar
 
 ```bash
 brew tap jjcfrancisco/mboff # Adds the Github repository as a tap
-brew install yeo
+brew install mboff
 ```
 
 ## Usage
