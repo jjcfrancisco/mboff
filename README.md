@@ -24,7 +24,6 @@ mboff myMap.mbtiles category=road 10
 ```
 
 ## Future
-* Add mboff to Homebrew
 * A command for *checking* if a key/value pair exist in a MBTiles file and how many times is present.
 * Extend/add validation for args
 
